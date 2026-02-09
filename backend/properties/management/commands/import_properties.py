@@ -36,6 +36,16 @@ class Command(BaseCommand):
             return default
 
     @staticmethod
+    def _to_optional_int(value):
+        text = str(value).strip()
+        if not text:
+            return None
+        try:
+            return int(float(text))
+        except (TypeError, ValueError):
+            return None
+
+    @staticmethod
     def _to_decimal_str(value, default='0.00'):
         text = str(value).strip()
         if not text:
@@ -126,22 +136,31 @@ class Command(BaseCommand):
 
                 slug = self._build_slug(title, self._value(row, 'slug', 'property_slug'))
 
-                property_obj, property_created = Property.objects.update_or_create(
-                    slug=slug,
-                    defaults={
-                        'location': location,
-                        'title': title,
-                        'description': self._value(row, 'description', 'details', default=''),
-                        'price_per_night': self._to_decimal_str(
-                            self._value(row, 'price_per_night', 'price', default='0')
-                        ),
-                        'bedrooms': self._to_int(self._value(row, 'bedrooms', default='1'), default=1),
-                        'bathrooms': self._to_int(self._value(row, 'bathrooms', default='1'), default=1),
-                        'max_guests': self._to_int(self._value(row, 'max_guests', 'guests', default='1'), default=1),
-                        'is_active': self._value(row, 'is_active', default='true').lower()
-                        not in {'false', '0', 'no'},
-                    },
-                )
+                property_payload = {
+                    'location': location,
+                    'title': title,
+                    'description': self._value(row, 'description', 'details', default=''),
+                    'price_per_night': self._to_decimal_str(
+                        self._value(row, 'price_per_night', 'price', default='0')
+                    ),
+                    'bedrooms': self._to_int(self._value(row, 'bedrooms', default='1'), default=1),
+                    'bathrooms': self._to_int(self._value(row, 'bathrooms', default='1'), default=1),
+                    'max_guests': self._to_int(self._value(row, 'max_guests', 'guests', default='1'), default=1),
+                    'is_active': self._value(row, 'is_active', default='true').lower()
+                    not in {'false', '0', 'no'},
+                }
+
+                source_id = self._to_optional_int(self._value(row, 'id'))
+                if source_id is not None:
+                    property_obj, property_created = Property.objects.update_or_create(
+                        id=source_id,
+                        defaults={**property_payload, 'slug': slug},
+                    )
+                else:
+                    property_obj, property_created = Property.objects.update_or_create(
+                        slug=slug,
+                        defaults=property_payload,
+                    )
 
                 if property_created:
                     created_properties += 1

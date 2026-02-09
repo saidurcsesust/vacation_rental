@@ -5,7 +5,7 @@ import PropertyCard from '../components/PropertyCard';
 import SearchBar from '../components/SearchBar';
 import { propertyAPI } from '../services/api';
 
-const PAGE_SIZE = 8;
+const PAGE_SIZE = 12;
 
 const HomePage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -75,35 +75,37 @@ const HomePage = () => {
       ) : error ? (
         <Alert severity="error">{error}</Alert>
       ) : (
-        <Box
-          sx={{
-            display: 'grid',
-            gap: 3,
-            gridTemplateColumns: {
-              xs: '1fr',
-              sm: 'repeat(2, minmax(0, 1fr))',
-              md: 'repeat(3, minmax(0, 1fr))',
-              lg: 'repeat(4, minmax(0, 1fr))',
-            },
-          }}
-        >
-          {properties.map((property) => (
-            <Box key={property.id} sx={{ display: 'flex' }}>
-              <PropertyCard property={property} />
-            </Box>
-          ))}
-        </Box>
-
-        {properties.length > 0 && (
-          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-            <Pagination
-              color="primary"
-              page={page}
-              count={totalPages}
-              onChange={(_event, value) => setSearchParams({ page: String(value) })}
-            />
+        <>
+          <Box
+            sx={{
+              display: 'grid',
+              gap: 3,
+              gridTemplateColumns: {
+                xs: '1fr',
+                sm: 'repeat(2, minmax(0, 1fr))',
+                md: 'repeat(3, minmax(0, 1fr))',
+                lg: 'repeat(4, minmax(0, 1fr))',
+              },
+            }}
+          >
+            {properties.map((property) => (
+              <Box key={property.id} sx={{ display: 'flex' }}>
+                <PropertyCard property={property} />
+              </Box>
+            ))}
           </Box>
-        )}
+
+          {properties.length > 0 && (
+            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+              <Pagination
+                color="primary"
+                page={page}
+                count={totalPages}
+                onChange={(_event, value) => setSearchParams({ page: String(value) })}
+              />
+            </Box>
+          )}
+        </>
       )}
     </Container>
   );

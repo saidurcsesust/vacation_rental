@@ -25,7 +25,7 @@ const Header = () => {
             onClick={() => navigate('/')}
             sx={{ cursor: 'pointer', fontWeight: 700, letterSpacing: 0.3 }}
           >
-            Vacation Rentals
+            Explore Rentals
           </Typography>
         </Toolbar>
       </Container>
