@@ -43,12 +43,22 @@ const SearchBar = ({ initialLocation = '', onSearch, compact = false }) => {
         options={options}
         loading={loading}
         inputValue={inputValue}
+        getOptionLabel={(option) => {
+          if (typeof option === 'string') return option;
+          return option.label || option.name || '';
+        }}
         onInputChange={(_event, value) => setInputValue(value)}
-        onChange={(_event, value) => setInputValue(value || '')}
+        onChange={(_event, value) => {
+          if (typeof value === 'string') {
+            setInputValue(value);
+            return;
+          }
+          setInputValue(value?.name || value?.label || '');
+        }}
         renderInput={(params) => (
           <TextField
             {...params}
-            label="Search by location"
+            label="Search by location, city, country"
             onKeyDown={(event) => {
               if (event.key === 'Enter') submit();
             }}

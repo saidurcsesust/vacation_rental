@@ -9,6 +9,7 @@ const fallbackImage = 'https://images.unsplash.com/photo-1464146072230-91cabc968
 
 const PropertyCard = ({ property }) => {
   const navigate = useNavigate();
+  const cityCountry = [property.location_city, property.location_country].filter(Boolean).join(', ');
 
   return (
     <Card sx={{ width: '100%', height: '100%' }}>
@@ -28,6 +29,7 @@ const PropertyCard = ({ property }) => {
           </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
             {property.location_name}
+            {cityCountry ? ` • ${cityCountry}` : ''}
           </Typography>
 
           <Stack direction="row" spacing={1} flexWrap="wrap" sx={{ mb: 2 }}>

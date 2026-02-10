@@ -27,6 +27,8 @@ class LocationSerializer(serializers.ModelSerializer):
 
 class PropertyListSerializer(serializers.ModelSerializer):
     location_name = serializers.CharField(source='location.name', read_only=True)
+    location_city = serializers.CharField(source='location.city', read_only=True)
+    location_country = serializers.CharField(source='location.country', read_only=True)
     primary_image = serializers.SerializerMethodField()
 
     class Meta:
@@ -36,6 +38,8 @@ class PropertyListSerializer(serializers.ModelSerializer):
             'title',
             'slug',
             'location_name',
+            'location_city',
+            'location_country',
             'price_per_night',
             'bedrooms',
             'bathrooms',

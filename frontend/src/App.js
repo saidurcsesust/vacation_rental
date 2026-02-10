@@ -1,6 +1,6 @@
 import React from 'react';
-import { BrowserRouter, Route, Routes, useNavigate } from 'react-router-dom';
-import { AppBar, Container, CssBaseline, ThemeProvider, Toolbar, Typography, createTheme } from '@mui/material';
+import { BrowserRouter, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { AppBar, Box, Button, Container, CssBaseline, ThemeProvider, Toolbar, Typography, createTheme } from '@mui/material';
 import HomePage from './pages/HomePage';
 import PropertyDetailsPage from './pages/PropertyDetailsPage';
 import SearchPage from './pages/SearchPage';
@@ -15,11 +15,17 @@ const theme = createTheme({
 
 const Header = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const navItems = [
+    { label: 'Home', path: '/' },
+    { label: 'Property List', path: '/search' },
+  ];
 
   return (
     <AppBar position="sticky">
       <Container maxWidth="lg">
-        <Toolbar disableGutters>
+        <Toolbar disableGutters sx={{ justifyContent: 'space-between' }}>
           <Typography
             variant="h6"
             onClick={() => navigate('/')}
@@ -27,6 +33,23 @@ const Header = () => {
           >
             Explore Rentals
           </Typography>
+
+          <Box sx={{ display: 'flex', gap: 1 }}>
+            {navItems.map((item) => (
+              <Button
+                key={item.path}
+                color="inherit"
+                onClick={() => navigate(item.path)}
+                sx={{
+                  fontWeight: 600,
+                  borderBottom: location.pathname === item.path ? '2px solid' : '2px solid transparent',
+                  borderRadius: 0,
+                }}
+              >
+                {item.label}
+              </Button>
+            ))}
+          </Box>
         </Toolbar>
       </Container>
     </AppBar>
